@@ -172,6 +172,8 @@ public interface JDA
 
     RestAction<User> retrieveUserById(String id);
 
+    RestAction<Webhook> retrieveWebhookById(String id);
+
     /**
      * An unmodifiable list of all {@link net.dv8tion.jda.core.entities.Guild Guilds} that this account is connected to.<br>
      * If this account is not connected to any {@link net.dv8tion.jda.core.entities.Guild Guilds}, this will return

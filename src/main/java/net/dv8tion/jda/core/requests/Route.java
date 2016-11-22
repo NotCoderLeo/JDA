@@ -126,6 +126,18 @@ public class Route
         public static final Route GET_MESSAGE =     new Route(GET, "channels/{channel_id}/messages/{message_id}", "channel_id");
         public static final Route DELETE_MESSAGES = new Route(POST, "channels/{channel_id}/messages/bulk_delete",  "channel_id");
     }
+    
+    public static class Webhooks
+    {
+        public static final Route CREATE_WEBHOOK =      new Route(POST, "channels/{channel_id}/webhooks", "channel_id");
+        
+        public static final Route GET_CHANNEL_WEBHOOKS =    new Route(GET, "channels/{channel_id}/webhooks", "channel_id");
+        public static final Route GET_GUILD_WEBHOOKS =    new Route(GET, "guilds/{guild_id}/webhooks", "guild_id");
+        public static final Route GET_WEBHOOK =     new Route(GET, "webhooks/{webhook_id}", "webhook_id");
+        public static final Route MODIFY_WEBHOOK =      new Route(PATCH, "webhooks/{webhook_id}", "webhook_id");
+        public static final Route DELETE_WEBHOOK =      new Route(DELETE, "webhooks/{webhook_id}", "webhook_id");
+        public static final Route EXECUTE_WEBHOOK =     new Route(POST, "webhooks/{webhook_id}/{webhook_token}", "webhook_id");
+    }
 
     public static class Invites
     {

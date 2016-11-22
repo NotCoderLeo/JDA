@@ -591,7 +591,52 @@ public class EntityBuilder
                 .setTopic(json.isNull("topic") ? "" : json.getString("topic"))
                 .setRawPosition(json.getInt("position"));
     }
-
+    
+    public Webhook createWebhook(JSONObject json, String guildId)
+    {
+        String id = json.getString("id");
+        WebhookImpl webhook = (WebhookImpl) api.getWebhookMap().get(id);
+        TextChannelImpl channel = (TextChannelImpl) api.getTextChannelMap().get(json.getString("channel_id"));
+        GuildImpl guild = null;
+        
+        if (webhook == null)
+        {
+            if (guildId != null)
+            {
+                guild = ((GuildImpl) api.getGuildMap().get(guildId));
+            }
+            
+            if (guild != null && channel != null)
+            {
+                webhook = new WebhookImpl(id, guild, channel, api);
+                
+                guild.getWebhooksMap().put(id, webhook);
+            } else
+            {
+                webhook = new WebhookImpl(id, null, null, api);
+            }
+            
+            api.getWebhookMap().put(id, webhook);
+        }
+        
+        webhook = webhook
+                .setName(json.has("name") && !json.isNull("name") ? json.getString("name") : null)
+                .setAvatar(json.has("avatar") && !json.isNull("avatar") ? json.getString("avatar") : null)
+                .setToken(json.getString("token"));
+        
+        if (json.has("user") && !json.isNull("user") && guild != null)
+        {
+            Member member = guild.getMembersMap().get(json.getJSONObject("user").getString("id"));
+            User user = member != null ? member.getUser() : null;
+            if (user != null)
+                webhook.setAuthor(user);
+            else
+                webhook.setAuthor(createFakeUser(json.getJSONObject("user"), false));
+        }
+        
+        return webhook;
+    }
+    
     public VoiceChannel createVoiceChannel(JSONObject json, String guildId)
     {
         String id = json.getString("id");

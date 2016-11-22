@@ -54,7 +54,8 @@ public class JDAImpl implements JDA
     protected final HashMap<String, TextChannel> textChannels = new HashMap<>();
     protected final HashMap<String, VoiceChannel> voiceChannels = new HashMap<>();
     protected final HashMap<String, PrivateChannel> privateChannels = new HashMap<>();
-
+    protected final HashMap<String, Webhook> webhooks = new HashMap<>();
+    
     protected final HashMap<String, User> fakeUsers = new HashMap<>();
     protected final HashMap<String, PrivateChannel> fakePrivateChannels = new HashMap<>();
 
@@ -334,7 +335,30 @@ public class JDAImpl implements JDA
             }
         };
     }
-
+    
+    @Override
+    public RestAction<Webhook> retrieveWebhookById(String id)
+    {
+        Route.CompiledRoute route = Route.Webhooks.GET_WEBHOOK.compile(id);
+    
+        return new RestAction<Webhook>(this, route, null)
+        {
+            @Override
+            protected void handleResponse(Response response, Request request)
+            {
+                if (!response.isOk())
+                {
+                    request.onFailure(response);
+                    return;
+                }
+            
+                JSONObject webhook = response.getObject();
+                request.onSuccess(EntityBuilder.get(api).createWebhook(webhook,
+                        webhook.has("guild_id") && !webhook.isNull("guild_id") ? webhook.getString("guild_id") : null));
+            }
+        };
+    }
+    
     @Override
     public List<Guild> getGuilds()
     {
@@ -597,7 +621,12 @@ public class JDAImpl implements JDA
     {
         return textChannels;
     }
-
+    
+    public HashMap<String, Webhook> getWebhookMap()
+    {
+        return webhooks;
+    }
+    
     public HashMap<String, VoiceChannel> getVoiceChannelMap()
     {
         return voiceChannels;

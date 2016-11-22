@@ -46,6 +46,7 @@ public class GuildImpl implements Guild
     private final HashMap<String, Member> members = new HashMap<>();
     private final HashMap<String, Role> roles = new HashMap<>();
     private final HashMap<String, Emote> emotes = new HashMap<>();
+    private final HashMap<String, Webhook> webhooks = new HashMap<>();
 
     private final HashMap<String, JSONObject> cachedPresences = new HashMap<>();
 
@@ -559,7 +560,12 @@ public class GuildImpl implements Guild
     {
         return textChannels;
     }
-
+    
+    public HashMap<String, Webhook> getWebhooksMap()
+    {
+        return webhooks;
+    }
+    
     public HashMap<String, VoiceChannel> getVoiceChannelMap()
     {
         return voiceChannels;
